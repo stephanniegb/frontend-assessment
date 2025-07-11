@@ -6,6 +6,14 @@ Transform this fintech transaction dashboard into a production-ready application
 
 **Time: 4-6 hours**
 
+## ⏰ Suggested Time Allocation
+
+- **Analysis & Planning**: 30-45 minutes
+- **Performance Optimization**: 2-2.5 hours (50% of effort)
+- **Architecture & Code Quality**: 1-1.5 hours (30% of effort)
+- **UI/UX Enhancement**: 45-60 minutes (20% of effort)
+- **Documentation**: 30-45 minutes
+
 ## 📋 Your Mission
 
 ### Performance Optimization (50%)
@@ -41,6 +49,10 @@ Transform this fintech transaction dashboard into a production-ready application
 - Unnecessary re-renders and missing memoization
 - Monolithic components with mixed concerns
 - Complex state structures and context recreation
+
+## 🚀 Advanced Requirements (Optional)
+
+- **Offline capabilities with service workers**: Implement caching strategies for offline functionality
 
 ## 🚀 Getting Started
 
@@ -85,6 +97,34 @@ _Note: Be prepared to discuss your technical decisions and demonstrate improveme
 - **Code**: Clean, self-documenting, follows established patterns
 - **Documentation**: Clear rationale for architectural decisions
 - **Testing**: Considerations for maintainability and edge cases
+
+### **UI/UX Enhancement Options**
+
+#### **Responsive Design**
+
+- Mobile-first approach with fluid layouts
+- Touch-friendly interactions and appropriate sizing
+- Optimized performance across device types
+
+#### **Advanced Interactions**
+
+- Smooth animations that enhance (not distract from) functionality
+- Keyboard shortcuts for power users
+- Intuitive user flows and feedback
+
+#### **Accessibility Excellence**
+
+- **Keyboard Navigation**: Full keyboard access with visible focus indicators
+- **Screen Reader Support**: Proper ARIA labels, roles, and live regions
+- **Color Contrast**: WCAG 2.1 AA compliance (4.5:1 ratio)
+- **Focus Management**: Logical tab order and focus trapping in modals
+- **Testing**: Use screen reader (NVDA/JAWS) or axe-core for validation
+
+#### **Progressive Enhancement**
+
+- Offline capabilities with service workers
+- Progressive loading states and skeleton screens
+- Graceful degradation for slower connections
 
 ## 📏 Evaluation Rubric
 
