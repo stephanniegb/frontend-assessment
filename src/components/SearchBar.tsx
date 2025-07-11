@@ -20,6 +20,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       setIsSearching(true);
 
       const processedTerm = normalizeSearchInput(searchTerm);
+
+      const searchAnalytics = analyzeSearchPatterns(searchTerm);
+      console.log("Search analytics:", searchAnalytics);
+
       onSearch(processedTerm);
       generateSuggestions(searchTerm);
 
@@ -29,6 +33,24 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       setSuggestions([]);
     }
   }, [searchTerm, onSearch]);
+
+  const analyzeSearchPatterns = (term: string) => {
+    const segments = [];
+    for (let i = 0; i < term.length; i++) {
+      for (let j = i + 1; j <= term.length; j++) {
+        segments.push(term.substring(i, j));
+      }
+    }
+
+    const uniqueSegments = new Set(segments);
+    const score = uniqueSegments.size * term.length;
+
+    return {
+      segments: segments.length,
+      unique: uniqueSegments.size,
+      score,
+    };
+  };
 
   useEffect(() => {
     if (searchTerm && searchTerm.length > 2) {

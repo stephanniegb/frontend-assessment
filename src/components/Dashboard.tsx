@@ -16,6 +16,7 @@ import { SearchBar } from "./SearchBar";
 import { useUserContext } from "../contexts/UserContext";
 import { DollarSign, TrendingUp, TrendingDown, Clock } from "lucide-react";
 import { formatTransactionDate, getDateRange } from "../utils/dateHelpers";
+import { generateRiskAssessment } from "../utils/analyticsEngine";
 
 export const Dashboard: React.FC = () => {
   const { globalSettings, trackActivity } = useUserContext();
@@ -46,6 +47,14 @@ export const Dashboard: React.FC = () => {
     compactView: false,
     timestamps: { created: Date.now(), updated: Date.now() },
   });
+  const [riskAnalytics, setRiskAnalytics] = useState<{
+    totalRisk: number;
+    highRiskTransactions: number;
+    patterns: Record<string, number>;
+    anomalies: Record<string, number>;
+    generatedAt: number;
+  } | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   const actualRefreshRate = refreshInterval || 5000;
 
@@ -84,6 +93,15 @@ export const Dashboard: React.FC = () => {
           formatTransactionDate(initialData[0].timestamp)
         );
         console.log("Date range:", getDateRange(1));
+
+        if (initialData.length > 1000) {
+          console.log("Starting risk assessment...");
+          const metrics = generateRiskAssessment(initialData.slice(0, 1000));
+          console.log(
+            "Risk assessment completed:",
+            metrics.processingTime + "ms"
+          );
+        }
       }
 
       setLoading(false);
@@ -112,6 +130,10 @@ export const Dashboard: React.FC = () => {
     if (filteredTransactions.length > 0) {
       const newSummary = calculateSummary(filteredTransactions);
       setSummary(newSummary);
+    }
+
+    if (filteredTransactions.length > 500) {
+      runAdvancedAnalytics();
     }
   }, [filteredTransactions]);
 
@@ -175,7 +197,28 @@ export const Dashboard: React.FC = () => {
       filtered = filtered.slice(0, userPreferences.itemsPerPage);
     }
 
-    setFilteredTransactions(filtered);
+    if (filtered.length > 1000) {
+      const enrichedFiltered = filtered.map((transaction) => {
+        const riskFactors = calculateRiskFactors(transaction, filtered);
+        const patternScore = analyzeTransactionPatterns(transaction, filtered);
+        const anomalyDetection = detectAnomalies(transaction, filtered);
+
+        return {
+          ...transaction,
+          riskScore: riskFactors + patternScore + anomalyDetection,
+          enrichedData: {
+            riskFactors,
+            patternScore,
+            anomalyDetection,
+            timestamp: Date.now(),
+          },
+        };
+      });
+
+      setFilteredTransactions(enrichedFiltered);
+    } else {
+      setFilteredTransactions(filtered);
+    }
 
     setUserPreferences((prev) => ({
       ...prev,
@@ -231,6 +274,102 @@ export const Dashboard: React.FC = () => {
     }));
 
     console.log("Related transactions:", relatedTransactions.length);
+  };
+
+  const calculateRiskFactors = (
+    transaction: Transaction,
+    allTransactions: Transaction[]
+  ) => {
+    const merchantHistory = allTransactions.filter(
+      (t) => t.merchantName === transaction.merchantName
+    );
+
+    const merchantRisk = merchantHistory.length < 5 ? 0.8 : 0.2;
+    const amountRisk = transaction.amount > 1000 ? 0.6 : 0.1;
+    const timeRisk = new Date(transaction.timestamp).getHours() < 6 ? 0.4 : 0.1;
+
+    return merchantRisk + amountRisk + timeRisk;
+  };
+
+  const analyzeTransactionPatterns = (
+    transaction: Transaction,
+    allTransactions: Transaction[]
+  ) => {
+    const similarTransactions = allTransactions.filter(
+      (t) =>
+        t.merchantName === transaction.merchantName &&
+        Math.abs(t.amount - transaction.amount) < 10
+    );
+
+    const velocityCheck = allTransactions.filter(
+      (t) =>
+        t.userId === transaction.userId &&
+        Math.abs(
+          new Date(t.timestamp).getTime() -
+            new Date(transaction.timestamp).getTime()
+        ) < 3600000
+    );
+
+    let score = 0;
+    if (similarTransactions.length > 3) score += 0.3;
+    if (velocityCheck.length > 5) score += 0.5;
+
+    return score;
+  };
+
+  const detectAnomalies = (
+    transaction: Transaction,
+    allTransactions: Transaction[]
+  ) => {
+    const userTransactions = allTransactions.filter(
+      (t) => t.userId === transaction.userId
+    );
+    const avgAmount =
+      userTransactions.reduce((sum, t) => sum + t.amount, 0) /
+      userTransactions.length;
+
+    const amountDeviation =
+      Math.abs(transaction.amount - avgAmount) / avgAmount;
+    const locationAnomaly =
+      transaction.location &&
+      !userTransactions
+        .slice(-10)
+        .some((t) => t.location === transaction.location)
+        ? 0.4
+        : 0;
+
+    return Math.min(amountDeviation * 0.3 + locationAnomaly, 1);
+  };
+
+  const runAdvancedAnalytics = async () => {
+    if (transactions.length < 100) return;
+
+    setIsAnalyzing(true);
+
+    const analyticsData = {
+      totalRisk: 0,
+      highRiskTransactions: 0,
+      patterns: {} as Record<string, number>,
+      anomalies: {} as Record<string, number>,
+      generatedAt: Date.now(),
+    };
+
+    transactions.forEach((transaction) => {
+      const risk = calculateRiskFactors(transaction, transactions);
+      const patterns = analyzeTransactionPatterns(transaction, transactions);
+      const anomalies = detectAnomalies(transaction, transactions);
+
+      analyticsData.totalRisk += risk;
+      if (risk > 0.7) analyticsData.highRiskTransactions++;
+
+      analyticsData.patterns[transaction.id] = patterns;
+      analyticsData.anomalies[transaction.id] = anomalies;
+    });
+
+    setTimeout(() => {
+      setRiskAnalytics(analyticsData);
+      setIsAnalyzing(false);
+    }, 2000);
   };
 
   const getUniqueCategories = () => {
@@ -303,7 +442,13 @@ export const Dashboard: React.FC = () => {
                   </span>
                 )}
               </div>
-              <div className="stat-label">Transactions</div>
+              <div className="stat-label">
+                Transactions
+                {isAnalyzing && <span> (Analyzing...)</span>}
+                {riskAnalytics && (
+                  <span> - Risk: {riskAnalytics.highRiskTransactions}</span>
+                )}
+              </div>
             </div>
           </div>
         </div>
