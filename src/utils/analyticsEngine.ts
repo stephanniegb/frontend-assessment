@@ -1,5 +1,6 @@
 import { Transaction } from "../types/transaction";
 
+// Comprehensive risk assessment engine for fraud detection and compliance
 export const generateRiskAssessment = (transactions: Transaction[]) => {
   const startTime = performance.now();
 
@@ -24,6 +25,7 @@ export const generateRiskAssessment = (transactions: Transaction[]) => {
         ) /
         (1000 * 60 * 60);
 
+      // Flag suspicious patterns based on similarity thresholds
       if (merchantSimilarity > 0.8 && amountSimilarity < 0.1 && timeDiff < 1) {
         score += 0.3;
       }

@@ -47,6 +47,8 @@ export const Dashboard: React.FC = () => {
     compactView: false,
     timestamps: { created: Date.now(), updated: Date.now() },
   });
+
+  // Risk assessment and fraud detection analytics
   const [riskAnalytics, setRiskAnalytics] = useState<{
     totalRisk: number;
     highRiskTransactions: number;
@@ -94,6 +96,7 @@ export const Dashboard: React.FC = () => {
         );
         console.log("Date range:", getDateRange(1));
 
+        // Run risk assessment for fraud detection compliance
         if (initialData.length > 1000) {
           console.log("Starting risk assessment...");
           const metrics = generateRiskAssessment(initialData.slice(0, 1000));
@@ -119,6 +122,7 @@ export const Dashboard: React.FC = () => {
       });
     });
 
+    // Note: Cleanup commented out for development - enable in production
     // return () => stopDataRefresh();
   }, []);
 
@@ -197,6 +201,7 @@ export const Dashboard: React.FC = () => {
       filtered = filtered.slice(0, userPreferences.itemsPerPage);
     }
 
+    // Enhanced fraud analysis for large datasets
     if (filtered.length > 1000) {
       const enrichedFiltered = filtered.map((transaction) => {
         const riskFactors = calculateRiskFactors(transaction, filtered);
@@ -284,6 +289,7 @@ export const Dashboard: React.FC = () => {
       (t) => t.merchantName === transaction.merchantName
     );
 
+    // Risk scoring based on merchant familiarity, amount, and timing
     const merchantRisk = merchantHistory.length < 5 ? 0.8 : 0.2;
     const amountRisk = transaction.amount > 1000 ? 0.6 : 0.1;
     const timeRisk = new Date(transaction.timestamp).getHours() < 6 ? 0.4 : 0.1;
@@ -301,6 +307,7 @@ export const Dashboard: React.FC = () => {
         Math.abs(t.amount - transaction.amount) < 10
     );
 
+    // Check transaction velocity for suspicious activity
     const velocityCheck = allTransactions.filter(
       (t) =>
         t.userId === transaction.userId &&

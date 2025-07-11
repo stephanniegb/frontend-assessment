@@ -21,6 +21,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
       const processedTerm = normalizeSearchInput(searchTerm);
 
+      // Generate search analytics for user behavior tracking
       const searchAnalytics = analyzeSearchPatterns(searchTerm);
       console.log("Search analytics:", searchAnalytics);
 
