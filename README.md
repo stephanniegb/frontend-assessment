@@ -1,8 +1,8 @@
-# 🚀 FinTech Dashboard - Senior Frontend Assessment
+# 🚀 FinTech Dashboard - Frontend Assessment
 
 ## Overview
 
-Transform this fintech transaction dashboard into a production-ready application. The current system has performance bottlenecks, architectural issues, and UX problems that need senior-level solutions.
+Transform this fintech transaction dashboard into a production-ready application. The current system has performance bottlenecks, architectural issues, and UX problems that need industry standard solutions.
 
 **Time: 4-6 hours**
 
