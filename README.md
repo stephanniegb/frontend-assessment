@@ -63,12 +63,13 @@ Transform this fintech transaction dashboard into a production-ready application
 
 ## 🚀 Getting Started
 
-1. Create a branch: `git checkout -b [your-name]-assessment-solution`
-2. `yarn install`
-3. `yarn dev`
-4. Analyze performance with dev tools
-5. Implement optimizations
-6. Submit: code + technical report
+1. **Fork this repository** to your GitHub account
+2. **Clone your fork**: `git clone [your-fork-url]`
+3. `yarn install`
+4. `yarn dev`
+5. Analyze performance with dev tools
+6. Implement optimizations
+7. Follow the submission instructions below
 
 ## 📊 Deliverables
 
@@ -77,9 +78,10 @@ Transform this fintech transaction dashboard into a production-ready application
 
 ## 📤 Submission Instructions
 
-1. **Push your branch**: `git push origin [your-name]-assessment-solution`
-2. **Send your technical report** to the assessment team
-3. **Notify completion** via email with your branch name
+1. **Push your changes** to your forked repository
+2. **Open a Pull Request** back to the original repository
+3. **Send your PR link** and technical report to the assessment team
+4. **Notify completion** via email with your PR link
 
 _Note: Be prepared to discuss your technical decisions and demonstrate improvements during the follow-up call._
 
