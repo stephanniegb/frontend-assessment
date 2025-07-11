@@ -9,14 +9,15 @@ Transform this fintech transaction dashboard into a production-ready application
 ## ⏰ Suggested Time Allocation
 
 - **Analysis & Planning**: 30-45 minutes
-- **Performance Optimization**: 2-2.5 hours (50% of effort)
+- **Performance Optimization**: 2-2.5 hours (40% of effort)
 - **Architecture & Code Quality**: 1-1.5 hours (30% of effort)
-- **UI/UX Enhancement**: 45-60 minutes (20% of effort)
+- **Testing & Quality Assurance**: 30-45 minutes (15% of effort)
+- **UI/UX Enhancement**: 45-60 minutes (15% of effort)
 - **Documentation**: 30-45 minutes
 
 ## 📋 Your Mission
 
-### Performance Optimization (50%)
+### Performance Optimization (40%)
 
 - **Analyze**: Use profiling tools to identify bottlenecks
 - **Fix**: Memory leaks, CPU blocking, inefficient rendering, poor algorithms
@@ -28,7 +29,13 @@ Transform this fintech transaction dashboard into a production-ready application
 - **Optimize**: State management and data flow
 - **Clean**: Apply SOLID principles and consistent patterns
 
-### UI/UX Enhancement (20%)
+### Testing & Quality Assurance (15%)
+
+- **Test**: Write unit tests for critical functionality
+- **Validate**: Ensure performance optimizations don't break existing features
+- **Document**: Test coverage and testing strategy
+
+### UI/UX Enhancement (15%)
 
 - **Choose 2**: Responsive design, advanced interactions, accessibility, or progressive enhancement
 - **Improve**: User experience with thoughtful design decisions
@@ -60,7 +67,7 @@ Transform this fintech transaction dashboard into a production-ready application
 2. `yarn dev`
 3. Analyze performance with dev tools
 4. Implement optimizations
-5. Submit: code + technical report + demo
+5. Submit: code + technical report
 
 ## 📊 Deliverables
 
@@ -74,6 +81,7 @@ _Note: Be prepared to discuss your technical decisions and demonstrate improveme
 - Measurable performance improvements
 - Clean, maintainable architecture
 - Production-ready code quality
+- Comprehensive test coverage
 - Thoughtful user experience enhancements
 
 ## 🎯 What Good Looks Like
@@ -97,6 +105,13 @@ _Note: Be prepared to discuss your technical decisions and demonstrate improveme
 - **Code**: Clean, self-documenting, follows established patterns
 - **Documentation**: Clear rationale for architectural decisions
 - **Testing**: Considerations for maintainability and edge cases
+
+### **Testing Excellence**
+
+- **Unit Tests**: Critical functionality covered with meaningful tests
+- **Performance Tests**: Validate optimizations don't break existing features
+- **Test Strategy**: Clear approach to testing components and utilities
+- **Coverage**: Focus on quality over quantity - test what matters
 
 ### **UI/UX Enhancement Options**
 
@@ -128,7 +143,7 @@ _Note: Be prepared to discuss your technical decisions and demonstrate improveme
 
 ## 📏 Evaluation Rubric
 
-### **Performance Optimization (50%)**
+### **Performance Optimization (40%)**
 
 - **Excellent (90-100%)**: Measurable improvements meeting all targets, systematic approach with profiling
 - **Good (70-89%)**: Significant improvements, most targets met, good analysis
@@ -142,7 +157,14 @@ _Note: Be prepared to discuss your technical decisions and demonstrate improveme
 - **Satisfactory (50-69%)**: Some architectural improvements, basic patterns
 - **Needs Improvement (<50%)**: Limited architectural thinking
 
-### **UI/UX Enhancement (20%)**
+### **Testing & Quality Assurance (15%)**
+
+- **Excellent (90-100%)**: Comprehensive test coverage with meaningful tests, validates optimizations
+- **Good (70-89%)**: Good test coverage for critical functionality, clear test strategy
+- **Satisfactory (50-69%)**: Basic tests covering key components, some validation
+- **Needs Improvement (<50%)**: Minimal or ineffective testing
+
+### **UI/UX Enhancement (15%)**
 
 - **Excellent (90-100%)**: Thoughtful, user-centered improvements with clear rationale
 - **Good (70-89%)**: Solid improvements addressing real user needs
