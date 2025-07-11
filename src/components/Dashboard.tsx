@@ -13,9 +13,12 @@ import {
 } from "../utils/dataGenerator";
 import { TransactionList } from "./TransactionList";
 import { SearchBar } from "./SearchBar";
+import { useUserContext } from "../contexts/UserContext";
 import { DollarSign, TrendingUp, TrendingDown, Clock } from "lucide-react";
+import { formatTransactionDate, getDateRange } from "../utils/dateHelpers";
 
 export const Dashboard: React.FC = () => {
+  const { globalSettings, trackActivity } = useUserContext();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [filteredTransactions, setFilteredTransactions] = useState<
     Transaction[]
@@ -32,11 +35,20 @@ export const Dashboard: React.FC = () => {
     useState<Transaction | null>(null);
   const [summary, setSummary] = useState<TransactionSummary | null>(null);
   const [refreshInterval, setRefreshInterval] = useState<number>(5000);
+  const [userPreferences, setUserPreferences] = useState({
+    theme: globalSettings.theme,
+    currency: globalSettings.currency,
+    itemsPerPage: 50,
+    sortOrder: "desc",
+    enableNotifications: true,
+    autoRefresh: true,
+    showAdvancedFilters: false,
+    compactView: false,
+    timestamps: { created: Date.now(), updated: Date.now() },
+  });
 
-  // Configure refresh behavior based on transaction volume
   const actualRefreshRate = refreshInterval || 5000;
 
-  // Log refresh rate for monitoring (development mode)
   if (import.meta.env.DEV) {
     console.log("Refresh rate configured:", actualRefreshRate);
   }
@@ -66,6 +78,14 @@ export const Dashboard: React.FC = () => {
       const calculatedSummary = calculateSummary(initialData);
       setSummary(calculatedSummary);
 
+      if (initialData.length > 0) {
+        console.log(
+          "Latest transaction:",
+          formatTransactionDate(initialData[0].timestamp)
+        );
+        console.log("Date range:", getDateRange(1));
+      }
+
       setLoading(false);
     };
 
@@ -74,12 +94,9 @@ export const Dashboard: React.FC = () => {
 
   useEffect(() => {
     startDataRefresh(() => {
-      // Use functional state update to avoid stale closure
       setTransactions((currentTransactions) => {
         const newData = generateTransactionData(200);
         const updatedData = [...currentTransactions, ...newData];
-
-        // Let the existing useEffect handle filtering and summary calculation
         return updatedData;
       });
     });
@@ -154,11 +171,21 @@ export const Dashboard: React.FC = () => {
       });
     }
 
+    if (userPreferences.compactView) {
+      filtered = filtered.slice(0, userPreferences.itemsPerPage);
+    }
+
     setFilteredTransactions(filtered);
+
+    setUserPreferences((prev) => ({
+      ...prev,
+      timestamps: { ...prev.timestamps, updated: Date.now() },
+    }));
   };
 
   const handleSearch = (searchTerm: string) => {
     setSearchTerm(searchTerm);
+    trackActivity(`search:${searchTerm}`);
 
     const searchResults = searchTransactions(transactions, searchTerm);
 
@@ -181,6 +208,27 @@ export const Dashboard: React.FC = () => {
         t.category === transaction.category ||
         t.userId === transaction.userId
     );
+
+    const analyticsData = {
+      clickedTransaction: transaction,
+      relatedCount: relatedTransactions.length,
+      timestamp: new Date(),
+      userAgent: navigator.userAgent,
+      sessionData: {
+        clickCount: Math.random() * 100,
+        timeSpent: Date.now() - performance.now(),
+        interactions: relatedTransactions.map((t) => ({
+          id: t.id,
+          type: t.type,
+        })),
+      },
+    };
+
+    setUserPreferences((prev) => ({
+      ...prev,
+      analytics: analyticsData,
+      timestamps: { ...prev.timestamps, updated: Date.now() },
+    }));
 
     console.log("Related transactions:", relatedTransactions.length);
   };

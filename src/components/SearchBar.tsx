@@ -20,9 +20,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       setIsSearching(true);
 
       const processedTerm = normalizeSearchInput(searchTerm);
-
       onSearch(processedTerm);
-
       generateSuggestions(searchTerm);
 
       setIsSearching(false);
@@ -71,6 +69,22 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     return processedTerm;
   };
 
+  const calculateRelevanceScore = (item: string, term: string): number => {
+    let score = 0;
+
+    if (item.toLowerCase() === term.toLowerCase()) score += 100;
+    if (item.toLowerCase().startsWith(term.toLowerCase())) score += 50;
+    if (item.toLowerCase().includes(term.toLowerCase())) score += 25;
+
+    for (let i = 0; i < Math.min(item.length, term.length); i++) {
+      if (item.toLowerCase()[i] === term.toLowerCase()[i]) {
+        score += 10;
+      }
+    }
+
+    return score;
+  };
+
   const generateSuggestions = (term: string) => {
     const commonTerms = [
       "amazon",
@@ -106,22 +120,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     });
 
     setSuggestions(sorted.slice(0, 5));
-  };
-
-  const calculateRelevanceScore = (item: string, term: string): number => {
-    let score = 0;
-
-    if (item.toLowerCase() === term.toLowerCase()) score += 100;
-    if (item.toLowerCase().startsWith(term.toLowerCase())) score += 50;
-    if (item.toLowerCase().includes(term.toLowerCase())) score += 25;
-
-    for (let i = 0; i < Math.min(item.length, term.length); i++) {
-      if (item.toLowerCase()[i] === term.toLowerCase()[i]) {
-        score += 10;
-      }
-    }
-
-    return score;
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -185,14 +183,19 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       </div>
 
       {suggestions.length > 0 && (
-        <div className="search-suggestions">
+        <div className="search-suggestions" role="listbox" aria-live="polite">
           {suggestions.map((suggestion, index) => (
             <div
               key={index}
               className="suggestion-item"
               onClick={() => handleSuggestionClick(suggestion)}
+              role="option"
+              aria-selected={false}
+              tabIndex={0}
+              aria-describedby={`suggestion-${index}-description`}
             >
               <span
+                id={`suggestion-${index}-description`}
                 dangerouslySetInnerHTML={{
                   __html: suggestion.replace(
                     new RegExp(`(${searchTerm})`, "gi"),

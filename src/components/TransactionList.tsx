@@ -28,10 +28,8 @@ export const TransactionList: React.FC<TransactionListProps> = ({
       };
     });
 
-    // Reset selection when transactions change
     setSelectedItems(new Set());
 
-    // Store formatted data for potential caching (will be optimized later)
     if (formattedTransactions.length > 0) {
       localStorage.setItem(
         "lastTransactionCount",
@@ -64,16 +62,20 @@ export const TransactionList: React.FC<TransactionListProps> = ({
   });
 
   return (
-    <div className="transaction-list">
+    <div
+      className="transaction-list"
+      role="region"
+      aria-label="Transaction list"
+    >
       <div className="transaction-list-header">
-        <h2>
+        <h2 id="transaction-list-title">
           Transactions ({transactions.length}
           {totalTransactions && totalTransactions !== transactions.length && (
             <span> of {totalTransactions}</span>
           )}
           )
         </h2>
-        <span className="total-amount">
+        <span className="total-amount" aria-live="polite">
           Total:{" "}
           {new Intl.NumberFormat("en-US", {
             style: "currency",
@@ -82,8 +84,14 @@ export const TransactionList: React.FC<TransactionListProps> = ({
         </span>
       </div>
 
-      <div className="transaction-list-container">
-        {sortedTransactions.map((transaction) => (
+      <div
+        className="transaction-list-container"
+        role="grid"
+        aria-labelledby="transaction-list-title"
+        aria-rowcount={sortedTransactions.length}
+        tabIndex={0}
+      >
+        {sortedTransactions.map((transaction, index) => (
           <TransactionItem
             key={transaction.id}
             transaction={transaction}
@@ -92,6 +100,7 @@ export const TransactionList: React.FC<TransactionListProps> = ({
             onClick={() => handleItemClick(transaction)}
             onMouseEnter={() => handleMouseEnter(transaction.id)}
             onMouseLeave={handleMouseLeave}
+            rowIndex={index}
           />
         ))}
       </div>
@@ -106,6 +115,7 @@ const TransactionItem: React.FC<{
   onClick: () => void;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
+  rowIndex: number;
 }> = ({
   transaction,
   isSelected,
@@ -113,6 +123,7 @@ const TransactionItem: React.FC<{
   onClick,
   onMouseEnter,
   onMouseLeave,
+  rowIndex,
 }) => {
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-US", {
@@ -155,6 +166,11 @@ const TransactionItem: React.FC<{
       onClick={onClick}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
+      role="gridcell"
+      aria-rowindex={rowIndex + 1}
+      aria-selected={isSelected}
+      aria-describedby={`transaction-${transaction.id}-details`}
+      tabIndex={0}
     >
       <div className="transaction-main">
         <div className="transaction-merchant">
@@ -168,17 +184,37 @@ const TransactionItem: React.FC<{
           </span>
         </div>
       </div>
-      <div className="transaction-details">
-        <div className="transaction-description">{transaction.description}</div>
+      <div
+        className="transaction-details"
+        id={`transaction-${transaction.id}-details`}
+      >
+        <div
+          className="transaction-description"
+          aria-label={`Description: ${transaction.description}`}
+        >
+          {transaction.description}
+        </div>
         <div className="transaction-meta">
-          <span className="transaction-date">
+          <span
+            className="transaction-date"
+            aria-label={`Date: ${formatDate(transaction.timestamp)}`}
+          >
             {formatDate(transaction.timestamp)}
           </span>
-          <span className={`transaction-status ${transaction.status}`}>
+          <span
+            className={`transaction-status ${transaction.status}`}
+            aria-label={`Status: ${transaction.status}`}
+            aria-live="polite"
+          >
             {transaction.status}
           </span>
           {transaction.location && (
-            <span className="transaction-location">{transaction.location}</span>
+            <span
+              className="transaction-location"
+              aria-label={`Location: ${transaction.location}`}
+            >
+              {transaction.location}
+            </span>
           )}
         </div>
       </div>

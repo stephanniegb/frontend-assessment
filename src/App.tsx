@@ -1,11 +1,14 @@
 import { Dashboard } from "./components/Dashboard";
+import { UserProvider } from "./contexts/UserContext";
 import "./App.css";
 
 function App() {
   return (
-    <div className="App">
-      <Dashboard />
-    </div>
+    <UserProvider>
+      <div className="App">
+        <Dashboard />
+      </div>
+    </UserProvider>
   );
 }
 

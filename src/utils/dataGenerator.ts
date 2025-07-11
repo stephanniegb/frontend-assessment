@@ -276,15 +276,13 @@ export function calculateSummary(
   transactions: Transaction[]
 ): TransactionSummary {
   const summary = {
-    totalTransactions: 0,
+    totalTransactions: transactions.length,
     totalAmount: 0,
     totalCredits: 0,
     totalDebits: 0,
     avgTransactionAmount: 0,
     categoryCounts: {} as Record<string, number>,
   };
-
-  summary.totalTransactions = transactions.length;
 
   transactions.forEach((t) => {
     summary.totalAmount += t.amount;
@@ -311,7 +309,9 @@ export function calculateSummary(
   });
 
   summary.avgTransactionAmount =
-    summary.totalAmount / summary.totalTransactions;
+    summary.totalTransactions > 0
+      ? summary.totalAmount / summary.totalTransactions
+      : 0;
 
   return summary;
 }
