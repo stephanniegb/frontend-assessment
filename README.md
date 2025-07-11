@@ -175,4 +175,4 @@ _Note: Be prepared to discuss your technical decisions and demonstrate improveme
 
 ---
 
-**Questions?** precious@grey.com, tega@grey.co, temilayo@grey.co
+**Questions?** precious@grey.co, tega@grey.co, temilayo@grey.co
