@@ -45,6 +45,7 @@ The initial version of the Transaction Dashboard was unusable — it froze the b
 
 - **Unit Tests:** Verified business logic work as expected
 - **Performance Tests:** Validated load time, search speed, memory usage, and frame rate under 100K records.
+- **Cross-Browser Testing:** Tested performance and functionality across to ensure consistent behavior.
 - **Profiling:** Used Chrome DevTools and Lighthouse for performance and memory profiling.
 
 ---
