@@ -81,6 +81,7 @@ The initial version of the Transaction Dashboard was unusable — it froze the b
 
 **After Optimization:**
 ![Lighthouse Current Results](./public/lighthouse-now.png)
+![Lighthouse Current Results](./public/lighthouse-now-2.png)
 
 ---
 
