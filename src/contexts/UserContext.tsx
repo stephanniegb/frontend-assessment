@@ -2,8 +2,6 @@ import React, { createContext, useContext, useState, useCallback } from "react";
 import { Transaction, FilterOptions } from "../types/transaction";
 import { applyFilters } from "../services/filter";
 import { useTransactionContext } from "./TransactionContext";
-// import { generateTransactionAnalytics } from "../services/analyticsService";
-// import { useUserPreferences } from "../hooks/useUserPreferences";
 
 interface UserContextType {
   globalSettings: {
@@ -99,26 +97,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     );
     setFilteredTransactions(filteredTransactions);
   };
-
-  // const handleAnalyticsUpdate = (analyticsData: any) => {
-  //   setUserPreferences((prev) => ({
-  //     ...prev,
-  //     analytics: analyticsData,
-  //     timestamps: { ...prev.timestamps, updated: Date.now() },
-  //   }));
-  // };
-
-  // useEffect(() => {
-  //   if (selectedTransaction) {
-  //     const analyticsData = generateTransactionAnalytics(
-  //       selectedTransaction,
-  //       [] // TODO: Add all transactions
-  //     );
-  //     handleAnalyticsUpdate(analyticsData);
-
-  //     console.log("Related transactions:", analyticsData.relatedCount);
-  //   }
-  // }, [selectedTransaction]);
 
   const value = {
     globalSettings,

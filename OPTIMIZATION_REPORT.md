@@ -23,6 +23,7 @@ The initial version of the Transaction Dashboard was unusable — it froze the b
 
 - Moved heavy operations (transaction generation, summaries) to **Web Workers**, freeing the main thread for UI responsiveness. Web Workers are widely supported across all modern browsers.
 - Simplified the transaction generation logic by removing unused properties and redundant computations.
+- Eliminated unused calculations, functions, and event listeners throughout the application that were consuming resources without providing value.
 - Introduced **debounced search** (500ms) to prevent excessive updates and improve responsiveness.
 
 ### Data Refresh Strategy
