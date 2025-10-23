@@ -1,0 +1,13 @@
+/* Main Styles Index - Import all component styles */
+
+/* Base styles */
+@import "./base/reset.css";
+
+/* Layout styles */
+@import "./layout/dashboard.css";
+
+/* Component styles */
+@import "./components/header/stats.css";
+@import "./components/header/search-filter.css";
+@import "./components/transactions/list.css";
+@import "./components/shared/modal-loading.css";

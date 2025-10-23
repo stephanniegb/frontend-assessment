@@ -1,4 +1,9 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useCallback } from "react";
+import { Transaction, FilterOptions } from "../types/transaction";
+import { applyFilters } from "../services/filter";
+import { useTransactionContext } from "./TransactionContext";
+// import { generateTransactionAnalytics } from "../services/analyticsService";
+// import { useUserPreferences } from "../hooks/useUserPreferences";
 
 interface UserContextType {
   globalSettings: {
@@ -11,16 +16,21 @@ interface UserContextType {
     permissions: string[];
     lastActivity: Date;
   };
-  notificationSettings: {
-    email: boolean;
-    push: boolean;
-    sms: boolean;
-    frequency: string;
-    categories: string[];
-  };
+
   updateGlobalSettings: (settings: any) => void;
-  updateNotificationSettings: (settings: any) => void;
   trackActivity: (activity: string) => void;
+
+  // Transaction management
+  selectedTransaction: Transaction | null;
+  handleTransactionClick: (transaction: Transaction) => void;
+  closeTransactionModal: () => void;
+
+  // Filter management
+  searchTerm: string;
+  filters: FilterOptions;
+  setSearchTerm: (term: string) => void;
+  setFilters: (filters: FilterOptions) => void;
+  handleFilterChange: (newFilters: FilterOptions) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -39,13 +49,21 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     lastActivity: new Date(),
   });
 
-  const [notificationSettings, setNotificationSettings] = useState({
-    email: true,
-    push: false,
-    sms: false,
-    frequency: "daily",
-    categories: ["transactions", "alerts"],
+  // Transaction management state
+  const [selectedTransaction, setSelectedTransaction] =
+    useState<Transaction | null>(null);
+
+  // Filter management state
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filters, setFilters] = useState<FilterOptions>({
+    type: "all",
+    status: "all",
+    category: "",
+    searchTerm: "",
   });
+
+  // Get transaction context for filtering
+  const { transactions, setFilteredTransactions } = useTransactionContext();
 
   const updateGlobalSettings = (settings: any) => {
     setGlobalSettings((prev) => ({
@@ -55,23 +73,65 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     }));
   };
 
-  const updateNotificationSettings = (settings: any) => {
-    setNotificationSettings((prev) => ({ ...prev, ...settings }));
-  };
-
   const trackActivity = (activity: string) => {
     setGlobalSettings((prev) => ({
       ...prev,
       lastActivity: new Date(),
+      lastActivityType: activity,
     }));
   };
 
+  const handleTransactionClick = useCallback((transaction: Transaction) => {
+    setSelectedTransaction(transaction);
+  }, []);
+
+  const closeTransactionModal = useCallback(() => {
+    setSelectedTransaction(null);
+  }, []);
+
+  // Filter management functions
+  const handleFilterChange = (newFilters: FilterOptions) => {
+    setFilters(newFilters);
+    const filteredTransactions = applyFilters(
+      transactions,
+      newFilters,
+      searchTerm
+    );
+    setFilteredTransactions(filteredTransactions);
+  };
+
+  // const handleAnalyticsUpdate = (analyticsData: any) => {
+  //   setUserPreferences((prev) => ({
+  //     ...prev,
+  //     analytics: analyticsData,
+  //     timestamps: { ...prev.timestamps, updated: Date.now() },
+  //   }));
+  // };
+
+  // useEffect(() => {
+  //   if (selectedTransaction) {
+  //     const analyticsData = generateTransactionAnalytics(
+  //       selectedTransaction,
+  //       [] // TODO: Add all transactions
+  //     );
+  //     handleAnalyticsUpdate(analyticsData);
+
+  //     console.log("Related transactions:", analyticsData.relatedCount);
+  //   }
+  // }, [selectedTransaction]);
+
   const value = {
     globalSettings,
-    notificationSettings,
     updateGlobalSettings,
-    updateNotificationSettings,
     trackActivity,
+    selectedTransaction,
+    handleTransactionClick,
+    closeTransactionModal,
+    searchTerm,
+    filters,
+    setSearchTerm,
+    setFilters,
+    handleFilterChange,
   };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

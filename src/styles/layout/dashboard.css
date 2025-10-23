@@ -1,0 +1,66 @@
+/* Dashboard Layout Styles - Mobile First */
+
+/* Mobile styles (base) */
+.dashboard {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 8px;
+}
+
+.dashboard-header {
+  margin-bottom: 20px;
+}
+
+.dashboard-header h1 {
+  font-size: 1.25rem;
+  color: #1a1a1a;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.dashboard-controls {
+  background: white;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+/* Tablet styles */
+@media (min-width: 480px) {
+  .dashboard {
+    padding: 12px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+  }
+
+  .dashboard-controls {
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+}
+
+/* Desktop styles */
+@media (min-width: 768px) {
+  .dashboard {
+    max-width: 800px;
+    padding: 20px;
+  }
+
+  .dashboard-header {
+    margin-bottom: 30px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+  }
+
+  .dashboard-controls {
+    padding: 24px;
+    margin-bottom: 30px;
+  }
+}
