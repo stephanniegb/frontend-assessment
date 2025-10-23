@@ -45,7 +45,6 @@ export const useDataRefresh = (intervalMs: number = 30000) => {
         setFilteredTransactions(updatedTransactions);
       }
 
-      // Add to database in background
       if (!dbRef.current) {
         dbRef.current = new TransactionDB();
         await dbRef.current.init();
@@ -83,16 +82,14 @@ export const useDataRefresh = (intervalMs: number = 30000) => {
   };
 
   const startPolling = () => {
-    if (workerRef.current) return; // Already running
+    if (workerRef.current) return;
 
-    // Initialize worker
     workerRef.current = new Worker(
       new URL("../workers/pollingWorker.ts", import.meta.url),
       { type: "module" }
     );
     workerRef.current.onmessage = handleWorkerMessage;
 
-    // Start polling
     workerRef.current.postMessage({
       type: "START_POLLING",
       intervalMs,

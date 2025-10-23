@@ -21,7 +21,7 @@ The initial version of the Transaction Dashboard was unusable — it froze the b
 
 ### Computation and Performance
 
-- Moved heavy operations (transaction generation, summaries) to **Web Workers**, freeing the main thread for UI responsiveness.
+- Moved heavy operations (transaction generation, summaries) to **Web Workers**, freeing the main thread for UI responsiveness. Web Workers are widely supported across all modern browsers.
 - Simplified the transaction generation logic by removing unused properties and redundant computations.
 - Introduced **debounced search** (500ms) to prevent excessive updates and improve responsiveness.
 
@@ -54,6 +54,7 @@ The initial version of the Transaction Dashboard was unusable — it froze the b
 - Improved layout responsiveness and accessibility compliance.
 - Achieved 60 FPS scrolling across large datasets.
 - Implemented Responsive mobile first styling
+- Persistent user filter when new data is added
 
 ### Accessibility & WCAG Compliance
 
