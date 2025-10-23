@@ -7,6 +7,7 @@ const Filter: React.FC = () => {
   return (
     <div className="filter-controls">
       <select
+        aria-label="Filter transactions by type"
         value={filters.type || "all"}
         onChange={(e) =>
           handleFilterChange({
@@ -21,6 +22,7 @@ const Filter: React.FC = () => {
       </select>
 
       <select
+        aria-label="Filter transactions by status"
         value={filters.status || "all"}
         onChange={(e) =>
           handleFilterChange({
@@ -40,6 +42,7 @@ const Filter: React.FC = () => {
       </select>
 
       <select
+        aria-label="Filter transactions by category"
         value={filters.category || ""}
         onChange={(e) =>
           handleFilterChange({ ...filters, category: e.target.value })

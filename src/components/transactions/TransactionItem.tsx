@@ -15,7 +15,6 @@ export const TransactionItem: React.FC<
   const transaction = transactions[index];
   const isSelected = selectedItems.has(transaction.id);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const rowIndex = index;
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -51,14 +50,12 @@ export const TransactionItem: React.FC<
           marginBottom: "20px",
           height: "169px",
         }}
-        role="row"
-        aria-rowindex={rowIndex + 1}
-        aria-selected={isSelected}
+        role="listitem"
+        aria-current={isSelected ? "true" : "false"}
       >
         <div
           className={getItemClassName()}
           onClick={handleTransactionClick}
-          role="gridcell"
           aria-describedby={`transaction-${transaction.id}-details`}
           tabIndex={0}
         >

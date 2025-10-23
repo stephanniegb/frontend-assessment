@@ -24,10 +24,9 @@ const TransactionListContainer = () => {
   return (
     <div
       className="transaction-list-container"
-      role="grid"
+      role="list"
       aria-labelledby="transaction-list-title"
-      aria-rowcount={filteredTransactions.length}
-      tabIndex={0}
+      aria-label={`Transaction list with ${filteredTransactions.length} items`}
     >
       <List
         rowComponent={TransactionItem}

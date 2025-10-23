@@ -55,6 +55,12 @@ The initial version of the Transaction Dashboard was unusable — it froze the b
 - Achieved 60 FPS scrolling across large datasets.
 - Implemented Responsive mobile first styling
 
+### Accessibility & WCAG Compliance
+
+- **Screen Reader Support**: Comprehensive ARIA roles and semantic HTML
+- **Visual Accessibility**: WCAG 2.1 AA color contrast compliance and responsive touch-friendly design
+- **Data Structure**: Proper grid semantics with contextual labels for transaction details
+
 ---
 
 ## Results
