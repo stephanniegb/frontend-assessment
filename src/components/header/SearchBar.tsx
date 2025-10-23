@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Search, X } from "lucide-react";
-import { debounce } from "lodash";
 
-import { useTransactionSearch } from "../../hooks/useTransactionSearch";
+import { useUserContext } from "../../contexts/UserContext";
 import { useTransactionContext } from "../../contexts/TransactionContext";
 import { filterTransactions } from "../../services/filter";
 import {
@@ -22,14 +21,23 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const [isSearching, setIsSearching] = useState(false);
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
   const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
-  const { filters, searchTerm, setSearchTerm } = useTransactionSearch();
+  const { filters, searchTerm, setSearchTerm } = useUserContext();
   const { setFilteredTransactions, transactions } = useTransactionContext();
 
-  const debouncedSearch = debounce((term: string) => {
-    if (term.length > 0) {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    if (debouncedSearchTerm.length > 0) {
       setIsSearching(true);
-      const processedTerm = normalizeSearchInput(term);
+      const processedTerm = normalizeSearchInput(debouncedSearchTerm);
 
       const searchResults = searchTransactions(
         transactions.slice(0, 100),
@@ -38,7 +46,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       const filtered = filterTransactions(searchResults, filters);
       setFilteredTransactions(filtered);
 
-      const suggestedTerms = generateSuggestions(term);
+      const suggestedTerms = generateSuggestions(debouncedSearchTerm);
       setSuggestions(suggestedTerms);
       setIsSearching(false);
     } else {
@@ -47,11 +55,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       setFilteredTransactions(filtered);
       setSuggestions([]);
     }
-  }, 500);
-
-  useEffect(() => {
-    debouncedSearch(searchTerm);
-  }, [searchTerm]);
+  }, [debouncedSearchTerm]);
 
   useEffect(() => {
     if (searchTerm && searchTerm.length > 2) {
@@ -112,7 +116,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
               aria-describedby={`suggestion-${index}-description`}
             >
               <span id={`suggestion-${index}-description`}>
-                {highlightSuggestion(suggestion, searchTerm)}
+                {highlightSuggestion(suggestion, debouncedSearchTerm)}
               </span>
             </div>
           ))}

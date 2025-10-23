@@ -1,8 +1,8 @@
-import { useTransactionSearch } from "../../hooks/useTransactionSearch";
+import { useUserContext } from "../../contexts/UserContext";
 import { TRANSACTION_CATEGORIES } from "../../static";
 
 const Filter: React.FC = () => {
-  const { handleFilterChange, filters } = useTransactionSearch();
+  const { handleFilterChange, filters } = useUserContext();
 
   return (
     <div className="filter-controls">
