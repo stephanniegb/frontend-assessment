@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Search, X } from "lucide-react";
+import { debounce } from "lodash";
 
 import { useTransactionSearch } from "../../hooks/useTransactionSearch";
 import { useTransactionContext } from "../../contexts/TransactionContext";
@@ -10,7 +11,6 @@ import {
   normalizeSearchInput,
   searchTransactions,
 } from "../../services/search";
-import { useDebounce } from "../../utils/debounce";
 
 interface SearchBarProps {
   placeholder?: string;
@@ -24,41 +24,40 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
   const { filters, searchTerm, setSearchTerm } = useTransactionSearch();
-
-  const debouncedSearchTerm = useDebounce(searchTerm, 500);
-
   const { setFilteredTransactions, transactions } = useTransactionContext();
 
-  const handleSearch = (searchTerm: string) => {
-    const searchResults = searchTransactions(
-      transactions.slice(0, 100),
-      searchTerm
-    );
-    const filtered = filterTransactions(searchResults, filters);
-    setFilteredTransactions(filtered);
-  };
-
-  useEffect(() => {
-    if (debouncedSearchTerm.length > 0) {
+  const debouncedSearch = debounce((term: string) => {
+    if (term.length > 0) {
       setIsSearching(true);
+      const processedTerm = normalizeSearchInput(term);
 
-      const processedTerm = normalizeSearchInput(debouncedSearchTerm);
+      const searchResults = searchTransactions(
+        transactions.slice(0, 100),
+        processedTerm
+      );
+      const filtered = filterTransactions(searchResults, filters);
+      setFilteredTransactions(filtered);
 
-      handleSearch(processedTerm);
-      const suggestedTerms = generateSuggestions(debouncedSearchTerm);
+      const suggestedTerms = generateSuggestions(term);
       setSuggestions(suggestedTerms);
       setIsSearching(false);
     } else {
-      handleSearch("");
+      const searchResults = searchTransactions(transactions.slice(0, 100), "");
+      const filtered = filterTransactions(searchResults, filters);
+      setFilteredTransactions(filtered);
       setSuggestions([]);
     }
-  }, [debouncedSearchTerm]);
+  }, 500);
 
   useEffect(() => {
-    if (debouncedSearchTerm && debouncedSearchTerm.length > 2) {
-      setSearchHistory((prev) => [...prev, debouncedSearchTerm]);
+    debouncedSearch(searchTerm);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    if (searchTerm && searchTerm.length > 2) {
+      setSearchHistory((prev) => [...prev, searchTerm]);
     }
-  }, [debouncedSearchTerm]);
+  }, [searchTerm]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;

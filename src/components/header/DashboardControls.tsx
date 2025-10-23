@@ -4,7 +4,7 @@ import Filter from "./Filter";
 const DashboardControls = () => {
   return (
     <div className="dashboard-controls">
-      <SearchBar />
+      {/* <SearchBar /> */}
       <Filter />
     </div>
   );

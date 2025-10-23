@@ -2,16 +2,13 @@ export interface Transaction {
   id: string;
   timestamp: Date;
   amount: number;
-  currency: string;
   type: "debit" | "credit";
   category: string;
   description: string;
   merchantName: string;
   status: "pending" | "completed" | "failed";
   userId: string;
-  accountId: string;
   location?: string;
-  reference?: string;
 }
 
 export interface TransactionSummary {

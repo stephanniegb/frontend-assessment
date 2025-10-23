@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { Transaction, TransactionSummary } from "../types/transaction";
 import { TransactionDB } from "../utils/transactionDB";
-import { debounce } from "../utils/debounce";
+import { debounce } from "lodash";
 
 const TRANSACTION_CONSTANTS = {
   TOTAL_TRANSACTIONS_TO_GENERATE: 100_000,
@@ -47,17 +47,14 @@ export const TransactionProvider: React.FC<{ children: React.ReactNode }> = ({
   const [summary, setSummary] = useState<TransactionSummary | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const debouncedCalculateSummary = useCallback(
-    debounce((transactions: Transaction[]) => {
-      if (transactions.length > 0 && transactionWorkerRef.current) {
-        transactionWorkerRef.current.postMessage({
-          type: "CALCULATE_SUMMARY",
-          transactions: transactions,
-        });
-      }
-    }, TRANSACTION_CONSTANTS.SUMMARY_DEBOUNCE_DELAY),
-    []
-  );
+  const debouncedCalculateSummary = debounce((transactions: Transaction[]) => {
+    if (transactions.length > 0 && transactionWorkerRef.current) {
+      transactionWorkerRef.current.postMessage({
+        type: "CALCULATE_SUMMARY",
+        transactions: transactions,
+      });
+    }
+  }, TRANSACTION_CONSTANTS.SUMMARY_DEBOUNCE_DELAY);
 
   const handleWorkerMessage = useCallback(async (event: MessageEvent) => {
     const { type, data, index, total, result } = event.data;
@@ -192,7 +189,7 @@ export const TransactionProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     debouncedCalculateSummary(filteredTransactions);
-  }, [filteredTransactions, debouncedCalculateSummary]);
+  }, [filteredTransactions]);
 
   const contextValue = {
     transactions: transactionsRef.current,
