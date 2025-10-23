@@ -17,7 +17,7 @@ The initial version of the Transaction Dashboard was unusable — it froze the b
 
 - Integrated **react-window** for virtualized rendering, ensuring only visible transactions are rendered.
 - Prevented unnecessary re-renders using **React.memo**, **useCallback**, and **useMemo**, ensuring components only re-render when their data actually changes.
-- Refactored contexts to separate user and transaction states, reducing global re-render triggers.
+- Refactored contexts to separate user and transaction states.
 
 ### Computation and Performance
 
@@ -42,7 +42,7 @@ The initial version of the Transaction Dashboard was unusable — it froze the b
 
 ## Testing and Validation
 
-- **Unit and Integration Tests:** Verified transaction generation, worker communication, and search functionality.
+- **Unit Tests:** Verified business logic work as expected
 - **Performance Tests:** Validated load time, search speed, memory usage, and frame rate under 100K records.
 - **Profiling:** Used Chrome DevTools and Lighthouse for performance and memory profiling.
 
