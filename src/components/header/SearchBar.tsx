@@ -50,7 +50,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       setSuggestions(suggestedTerms);
       setIsSearching(false);
     } else {
-      const searchResults = searchTransactions(transactions.slice(0, 100), "");
+      const searchResults = searchTransactions(transactions, "");
       const filtered = filterTransactions(searchResults, filters);
       setFilteredTransactions(filtered);
       setSuggestions([]);
