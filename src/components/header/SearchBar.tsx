@@ -39,10 +39,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       setIsSearching(true);
       const processedTerm = normalizeSearchInput(debouncedSearchTerm);
 
-      const searchResults = searchTransactions(
-        transactions.slice(0, 100),
-        processedTerm
-      );
+      const searchResults = searchTransactions(transactions, processedTerm);
       const filtered = filterTransactions(searchResults, filters);
       setFilteredTransactions(filtered);
 
